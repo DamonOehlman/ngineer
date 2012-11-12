@@ -1,4 +1,5 @@
 .DS_Store
 node_modules
 test/integration/*/logs/*.log
+test/integration/*/logs/*.pid
 test/integration/*/conf/locations
