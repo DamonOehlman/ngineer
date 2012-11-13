@@ -3,27 +3,25 @@ var ngineer = require('../../'),
     assert = require('assert'),
     exec = require('child_process').exec,
     testServer = require('../helpers/test-server'),
-    serverPath = path.resolve(__dirname, 'server'),
-    nginxCommand = 'nginx -p ' + serverPath + ' -c conf/nginx.conf',
-    nginx,
+    nginx = require('../helpers/nginx'),
     request = require('supertest'),
-    baseUrl = 'http://localhost:8886';
+    instance;
 
 // bind the request arg
 // request = request.bind(request, 'http://localhost:8886');
 
 describe('add location test', function() {
-    before(exec.bind(exec, nginxCommand));
+    before(nginx.start);
 
-    after(exec.bind(exec, nginxCommand + ' -s stop'));
+    after(nginx.stop);
     after(testServer.close.bind(testServer));
 
     it('should validate nginx is running', function(done) {
-        request(baseUrl).get('/').expect(200, done);
+        request(nginx.url).get('/').expect(200, done);
     });
 
     it('should be able to create an ngineer instance', function(done) {
-        nginx = ngineer(serverPath).on('online', done);
+        instance = ngineer(nginx.path).on('online', done);
     });
 
     it('should be able to start the test node server', function(done) {
@@ -38,13 +36,13 @@ describe('add location test', function() {
     });
 
     it('should be able to add a new location to the nginx server', function(done) {
-        nginx.location('/test')
+        instance.location('/test')
             .proxy('http://localhost:3000')
             .save(done);
     });
 
     it('should be able to request an nginx configuration reload', function() {
-        nginx.reload();
+        instance.reload();
     });
 
     it('should be able to request the new location', function(done) {
