@@ -15,6 +15,9 @@ function Ngineer(basePath, opts) {
     // initialise the basepath to the path provided
     this.basePath = path.resolve(basePath);
 
+    // initialise the location path
+    this.locationPath = opts.locationPath || path.resolve(this.basePath, 'conf', 'locations');
+
     // initialise to not online
     this._online = false;
 

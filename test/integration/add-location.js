@@ -36,7 +36,8 @@ describe('add location test', function() {
     });
 
     it('should be able to add a new location to the nginx server', function(done) {
-        instance.location('/test')
+        instance
+            .location('/test')
             .proxy('http://localhost:3000')
             .save(done);
     });
@@ -46,6 +47,6 @@ describe('add location test', function() {
     });
 
     it('should be able to request the new location', function(done) {
-        done();
+        request(nginx.url).get('/test').expect(200, done);
     });
 })
