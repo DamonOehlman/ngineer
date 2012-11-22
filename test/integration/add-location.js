@@ -5,6 +5,7 @@ var ngineer = require('../../'),
     testServer = require('../helpers/test-server'),
     nginx = require('../helpers/nginx'),
     request = require('supertest'),
+    rimraf = require('rimraf'),
     instance;
 
 // bind the request arg
@@ -15,6 +16,7 @@ describe('add location test', function() {
 
     after(nginx.stop);
     after(testServer.close.bind(testServer));
+    after(rimraf.bind(null, path.join(nginx.path, 'conf', 'locations')));
 
     it('should validate nginx is running', function(done) {
         request(nginx.url).get('/').expect(200, done);
@@ -42,8 +44,13 @@ describe('add location test', function() {
             .save(done);
     });
 
-    it('should be able to request an nginx configuration reload', function() {
-        instance.reload();
+    it('should be able to request an nginx configuration reload', function(done) {
+        instance.reload(function(err) {
+            assert.ifError(err);
+
+            // give nginx a chance to reload
+            setTimeout(done, 500);
+        });
     });
 
     it('should be able to request the new location', function(done) {

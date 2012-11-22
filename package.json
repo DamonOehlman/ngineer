@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "mocha": "1.6.x",
+    "rimraf": "2.0.x",
     "supertest": "0.4.x",
     "tako": "git://github.com/mikeal/tako.git"
   },

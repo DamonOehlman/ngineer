@@ -4,6 +4,7 @@ var debug = require('debug')('ngineer'),
     events = require('events'),
     util = require('util'),
     procinfo = require('procinfo'),
+    exec = require('child_process').exec,
     NginxLocation = require('./lib/location');
 
 function Ngineer(basePath, opts) {
@@ -20,6 +21,9 @@ function Ngineer(basePath, opts) {
 
     // initialise to not online
     this._online = false;
+
+    // initialise the pid to undefined
+    this._pid = undefined;
 
     // setup monitoring of the pid file
     this._readPID(opts);
@@ -40,10 +44,8 @@ Ngineer.prototype.location = function(pattern) {
 
 The reload method sends the reload configuration (HUP) signal to the nginx process.
 */
-Ngineer.prototype.reload = function() {
-    // TODO: send the signal
-
-    return this;
+Ngineer.prototype.reload = function(callback) {
+    exec('kill -s HUP ' + this._pid, callback);
 };
 
 /* internal methods */
@@ -68,6 +70,7 @@ Ngineer.prototype._readPID = function(opts) {
         else {
             debug('looking up process information for process: ' + data);
             procinfo(parseInt(data, 10), function(err, processData) {
+                ngineer._pid = processData.pids[0];
                 ngineer.online = !err;
             });
         }
