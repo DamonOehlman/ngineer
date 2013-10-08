@@ -1,13 +1,8 @@
 {
   "name": "ngineer",
   "description": "Generate proxy routes for nginx",
-  "author": "Damon Oehlman <damon.oehlman@sidelab.com>",
-  "tags": [
-  ],
+  "author": "Damon Oehlman <damon.oehlman@gmail.com>",
   "version": "0.0.0",
-  "engines": {
-    "node": ">= 0.6.x < 0.9.0"
-  },
   "dependencies": {
     "debug": "*",
     "mkdirp": "0.3.x",
@@ -21,14 +16,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/DamonOehlman/ngineer.git"
+    "url": "https://bitbucket.org/DamonOehlman/ngineer.git"
   },
   "bugs": {
-    "url": "http://github.com/DamonOehlman/ngineer/issues"
+    "url": "https://bitbucket.org/DamonOehlman/ngineer/issues"
   },
   "scripts": {
     "test": "mocha --reporter spec",
     "test-integration": "./node_modules/.bin/mocha test/integration"
   },
-  "contributors": []
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "nginx",
+    "automation"
+  ],
+  "license": "MIT"
 }
