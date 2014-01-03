@@ -1,6 +1,5 @@
-var tako = require('tako'),
-    app = tako();
+var server = require('http').createServer(function(req, res) {
+  res.end('Test Server')
+})
 
-app.route('/').text('Test Server');
-
-module.exports = app.httpServer;
+module.exports = server

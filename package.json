@@ -12,7 +12,6 @@
     "mocha": "~1.16.2",
     "rimraf": "~2.2.5",
     "supertest": "~0.8.2",
-    "tako": "mikeal/tako"
   },
   "repository": {
     "type": "git",
@@ -22,8 +21,8 @@
     "url": "https://github.com/DamonOehlman/ngineer/issues"
   },
   "scripts": {
-    "test": "$(npm bin)/mocha --reporter spec",
-    "test-integration": "$(npm bin)/mocha test/integration"
+    "test": "mocha --reporter spec",
+    "test-integration": "mocha test/integration"
   },
   "main": "index.js",
   "directories": {
