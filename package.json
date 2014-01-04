@@ -9,21 +9,21 @@
     "procinfo": "0.1.x"
   },
   "devDependencies": {
-    "mocha": "1.6.x",
-    "rimraf": "2.0.x",
-    "supertest": "0.4.x",
-    "tako": "git://github.com/mikeal/tako.git"
+    "mocha": "~1.16.2",
+    "rimraf": "~2.2.5",
+    "supertest": "~0.8.2",
+    "tako": "mikeal/tako"
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/DamonOehlman/ngineer.git"
+    "url": "https://github.com/DamonOehlman/ngineer.git"
   },
   "bugs": {
-    "url": "https://bitbucket.org/DamonOehlman/ngineer/issues"
+    "url": "https://github.com/DamonOehlman/ngineer/issues"
   },
   "scripts": {
-    "test": "mocha --reporter spec",
-    "test-integration": "./node_modules/.bin/mocha test/integration"
+    "test": "$(npm bin)/mocha --reporter spec",
+    "test-integration": "$(npm bin)/mocha test/integration"
   },
   "main": "index.js",
   "directories": {
