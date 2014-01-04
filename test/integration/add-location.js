@@ -11,7 +11,7 @@ var ngineer = require('../../'),
 // bind the request arg
 // request = request.bind(request, 'http://localhost:8886');
 
-describe('add location test', function() {
+describe('add location', function() {
     before(nginx.start);
 
     after(nginx.stop);
@@ -23,7 +23,7 @@ describe('add location test', function() {
     });
 
     it('should be able to create an ngineer instance', function(done) {
-        instance = ngineer(nginx.path).on('online', done);
+        instance = ngineer(nginx.path).once('online', done);
     });
 
     it('should be able to start the test node server', function(done) {

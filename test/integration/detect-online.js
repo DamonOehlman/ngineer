@@ -6,7 +6,7 @@ var ngineer = require('../../'),
     request = require('supertest'),
     instance;
 
-describe('add location test', function() {
+describe('detect online', function() {
     before(nginx.start);
     after(nginx.stop);
 
