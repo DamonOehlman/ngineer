@@ -1,6 +1,7 @@
 {
   "badges": {
     "nodeico": true,
+    "stability": "experimental",
     "travis": true,
     "david": true
   },

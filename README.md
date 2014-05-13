@@ -10,17 +10,19 @@ Additionally, ngineer communicates with the `nginx` process and sends the
 `HUP` [signal](http://wiki.nginx.org/CommandLine#Loading_a_New_Configuration_Using_Signals)
 to flag the the nginx configuration should be reloaded and nginx gracefully restarted.
 
+
+[![NPM](https://nodei.co/npm/ngineer.png)](https://nodei.co/npm/ngineer/)
+
+[![experimental](https://img.shields.io/badge/stability-experimental-red.svg)](https://github.com/badges/stability-badges) [![Build Status](https://img.shields.io/travis/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer) [![Dependency Status](https://david-dm.org/DamonOehlman/ngineer.svg)](https://david-dm.org/DamonOehlman/ngineer) 
+
+## Why ngineer?
+
 Why do you want this?  Well, because `nginx` does a kick arse job of serving
 static files and also proxying services so it makes sense you use it over
 pure node alternatives such as [node-http-proxy](https://github.com/nodejitsu/node-http-proxy).
 No offense is meant to the awesome [nodejitsu](nodejitsu.com) team here, but
 I feel much more comfortable using nginx over node to be the first line in
 serving both node applications and static content.
-
-
-[![NPM](https://nodei.co/npm/ngineer.png)](https://nodei.co/npm/ngineer/)
-
-[![Build Status](https://img.shields.io/travis/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer) [![Dependency Status](https://david-dm.org/DamonOehlman/ngineer.svg)](https://david-dm.org/DamonOehlman/ngineer) 
 
 ## Prior Art
 

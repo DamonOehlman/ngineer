@@ -20,6 +20,8 @@ var debug = require('debug')('ngineer'),
   `HUP` [signal](http://wiki.nginx.org/CommandLine#Loading_a_New_Configuration_Using_Signals)
   to flag the the nginx configuration should be reloaded and nginx gracefully restarted.
 
+  ## Why ngineer?
+
   Why do you want this?  Well, because `nginx` does a kick arse job of serving
   static files and also proxying services so it makes sense you use it over
   pure node alternatives such as [node-http-proxy](https://github.com/nodejitsu/node-http-proxy).
