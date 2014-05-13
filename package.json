@@ -5,13 +5,13 @@
   "version": "0.0.2",
   "dependencies": {
     "debug": "*",
-    "mkdirp": "0.3.x",
-    "procinfo": "0.1.x"
+    "mkdirp": "~0.5",
+    "procinfo": "~0.1"
   },
   "devDependencies": {
-    "mocha": "~1.16.2",
-    "rimraf": "~2.2.5",
-    "supertest": "~0.8.2"
+    "mocha": "^1",
+    "rimraf": "^2",
+    "supertest": "~0.12"
   },
   "repository": {
     "type": "git",
