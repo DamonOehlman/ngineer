@@ -20,7 +20,7 @@ serving both node applications and static content.
 
 [![NPM](https://nodei.co/npm/ngineer.png)](https://nodei.co/npm/ngineer/)
 
-[![Dependency Status](https://david-dm.org/DamonOehlman/ngineer.svg)](https://david-dm.org/DamonOehlman/ngineer) 
+[![Build Status](https://img.shields.io/travis/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer) [![Dependency Status](https://david-dm.org/DamonOehlman/ngineer.svg)](https://david-dm.org/DamonOehlman/ngineer) 
 
 ## Prior Art
 

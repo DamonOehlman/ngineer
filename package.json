@@ -21,7 +21,7 @@
     "url": "https://github.com/DamonOehlman/ngineer/issues"
   },
   "scripts": {
-    "test": "mocha test/integration --reporter spec"
+    "test": "mocha test/integration --reporter spec",
     "gendocs": "gendocs > README.md"
   },
   "main": "index.js",
