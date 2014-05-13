@@ -22,7 +22,8 @@
   },
   "scripts": {
     "test": "mocha --reporter spec",
-    "test-integration": "mocha test/integration"
+    "test-integration": "mocha test/integration",
+    "gendocs": "gendocs > README.md"
   },
   "main": "index.js",
   "directories": {
