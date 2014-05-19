@@ -7,6 +7,7 @@ before_install:
   - sudo apt-get install nginx
   - sudo touch /var/log/nginx/error.log
   - sudo chmod a+rw /var/log/nginx/error.log
+  - sudo chmod a+rw /var/lib/nginx
 
 notifications:
   email:
