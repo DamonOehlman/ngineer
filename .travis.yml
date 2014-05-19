@@ -5,6 +5,7 @@ node_js:
 before_install:
   - sudo apt-get update
   - sudo apt-get install nginx
+  - sudo touch /var/log/nginx/error.log
   - sudo chmod a+rw /var/log/nginx/error.log
 
 notifications:
