@@ -5,7 +5,7 @@ var events = require('events');
 var util = require('util');
 var procinfo = require('procinfo');
 var exec = require('child_process').exec;
-var NginxLocation = require('./lib/location');
+var NginxLocation = require('./location');
 
 /**
   # ngineer
