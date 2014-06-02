@@ -11,6 +11,7 @@
     "replacestream": "~0.1"
   },
   "devDependencies": {
+    "express": "^4",
     "mocha": "^1",
     "rimraf": "^2",
     "supertest": "~0.12"
