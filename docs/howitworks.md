@@ -4,11 +4,13 @@ Ngineer expects that it will have a nginx configuration folder that it s respons
 
 When using ngineer it's important to note that you are probably accepting a few levels of HTTP proxying to make the magic happen.  In the case of new version of [steelmesh](https://github.com/steelmesh/steelmesh) that is under development, we are using an archictecture similar to what is displayed below:
 
-  +----------------+      +----------------+      +----------------+
-  |                |+---->|                |+---->|                |
-  |     HAproxy    |      |      nginx     |      |      node      |
-  |                |<----+|                |<----+|                |
-  +----------------+      +----------------+      +----------------+
+```
++----------------+      +----------------+      +----------------+
+|                |+---->|                |+---->|                |
+|     HAproxy    |      |      nginx     |      |      node      |
+|                |<----+|                |<----+|                |
++----------------+      +----------------+      +----------------+
+```
 
 ### Handling nginx restarts
 
