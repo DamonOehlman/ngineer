@@ -1,17 +1,38 @@
 var async = require('async');
 var fs = require('fs');
 var path = require('path');
-var executables = exports.executables = [
+var possibleExecutables = exports.executables = [
   path.resolve('nginx'),
   '/usr/sbin/nginx'
 ];
 
 exports.command = function(basePath, callback) {
-  async.filter(executables, fs.exists, function(results) {
-    if (results.length === 0) {
-      callback(new Error('No nginx executable found'));
-    }
+  async.filter(possibleExecutables, fs.exists, function(executables) {
+    async.map(executables, fs.stat, function(err, results) {
+      if (err) {
+        return callback(err);
+      }
 
-    callback(null, results[0] + ' -p ' + basePath + '/ -c conf/nginx.conf');
+      // find the first result that is a file
+      results = results
+        .map(function(stats, idx) {
+          return {
+            stats: stats,
+            executable: executables[idx]
+          };
+        })
+        .filter(function(data) {
+          return data.stats.isFile();
+        });
+
+      if (results.length === 0) {
+        return callback(new Error('No nginx executable found'));
+      }
+
+      callback(
+        null,
+        results[0].executable + ' -p ' + basePath + '/ -c conf/nginx.conf'
+      );
+    });
   });
 };
