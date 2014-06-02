@@ -7,7 +7,7 @@ var replaceStream = require('replacestream');
 var CONFIG_DIRS = [ 'conf', 'html', 'logs' ];
 var REQUIRED_FILES = [
   'conf/mime.types',
-  'conf/server.conf',
+  'conf/nginx.conf',
   'html/index.html'
 ];
 
