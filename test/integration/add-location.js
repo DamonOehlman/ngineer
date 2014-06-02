@@ -44,15 +44,6 @@ describe('add location', function() {
     .save(done);
   });
 
-  it('should be able to request an nginx configuration reload', function(done) {
-    instance.reload(function(err) {
-      assert.ifError(err);
-
-      // give nginx a chance to reload
-      setTimeout(done, 500);
-    });
-  });
-
   it('should be able to request the new location', function(done) {
     request(nginx.url).get('/test').expect(200, done);
   });
