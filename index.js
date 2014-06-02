@@ -1,11 +1,11 @@
-var debug = require('debug')('ngineer'),
-    fs = require('fs'),
-    path = require('path'),
-    events = require('events'),
-    util = require('util'),
-    procinfo = require('procinfo'),
-    exec = require('child_process').exec,
-    NginxLocation = require('./lib/location');
+var debug = require('debug')('ngineer');
+var fs = require('fs');
+var path = require('path');
+var events = require('events');
+var util = require('util');
+var procinfo = require('procinfo');
+var exec = require('child_process').exec;
+var NginxLocation = require('./lib/location');
 
 /**
   # ngineer
@@ -43,35 +43,40 @@ var debug = require('debug')('ngineer'),
 **/
 
 function Ngineer(basePath, opts) {
-    events.EventEmitter.call(this);
+  if (! (this instanceof Ngineer)) {
+    return new Ngineer(basePath, opts);
+  }
 
-    // ensure we have opts
-    opts = opts || {};
+  events.EventEmitter.call(this);
 
-    // initialise the basepath to the path provided
-    this.basePath = path.resolve(basePath);
+  // ensure we have opts
+  opts = opts || {};
 
-    // initialise the location path
-    this.locationPath = opts.locationPath || path.resolve(this.basePath, 'conf', 'locations');
+  // initialise the basepath to the path provided
+  this.basePath = path.resolve(basePath);
 
-    // initialise to not online
-    this._online = false;
+  // initialise the location path
+  this.locationPath = opts.locationPath || path.resolve(this.basePath, 'conf', 'locations');
 
-    // initialise the pid to undefined
-    this._pid = undefined;
+  // initialise to not online
+  this._online = false;
 
-    // setup monitoring of the pid file
-    this._readPID(opts);
-    // create a file system watcher for the pid file
-    // this.watcher = fs.watch(path.resolve(basePath, ))
+  // initialise the pid to undefined
+  this._pid = undefined;
 
-    // look for t
+  // setup monitoring of the pid file
+  this._readPID(opts);
+  // create a file system watcher for the pid file
+  // this.watcher = fs.watch(path.resolve(basePath, ))
+
+  // look for t
 }
 
 util.inherits(Ngineer, events.EventEmitter);
+module.exports = Ngineer;
 
 Ngineer.prototype.location = function(pattern) {
-    return new NginxLocation(pattern, this);
+  return new NginxLocation(pattern, this);
 };
 
 /**
@@ -80,61 +85,56 @@ Ngineer.prototype.location = function(pattern) {
 The reload method sends the reload configuration (HUP) signal to the nginx process.
 */
 Ngineer.prototype.reload = function(callback) {
-    exec('kill -s HUP ' + this._pid, callback);
+  exec('kill -s HUP ' + this._pid, callback);
 };
 
 /* internal methods */
 
 Ngineer.prototype._readPID = function(opts) {
-    var ngineer = this,
-        pidLocation = path.resolve(this.basePath, opts.pidFile || 'logs/nginx.pid');
+  var ngineer = this;
+  var pidLocation = path.resolve(this.basePath, opts.pidFile || 'logs/nginx.pid');
 
-    // open the pid file
-    fs.readFile(pidLocation, 'utf8', function(err, data) {
-        var watchTarget = err ? path.dirname(pidLocation) : pidLocation;
+  // open the pid file
+  fs.readFile(pidLocation, 'utf8', function(err, data) {
+    var watchTarget = err ? path.dirname(pidLocation) : pidLocation;
 
-        // if we hit an error opening the file, then the pid file does not exist
-        // therefore we will assume that nginx is not running
-        if (err) {
-            // if we are currently online, then flag then update the flag and trigger the offline event
-            if (ngineer.online) {
-                ngineer.online = false;
-            }
-        }
-        // otherwise, read the file and check on the process status
-        else {
-            debug('looking up process information for process: ' + data);
-            procinfo(parseInt(data, 10), function(err, processData) {
-                ngineer._pid = processData.pids[0];
-                ngineer.online = !err;
-            });
-        }
+    // if we hit an error opening the file, then the pid file does not exist
+    // therefore we will assume that nginx is not running
+    if (err) {
+      // if we are currently online, then flag then update the flag and trigger the offline event
+      if (ngineer.online) {
+        ngineer.online = false;
+      }
+    }
+    // otherwise, read the file and check on the process status
+    else {
+      debug('looking up process information for process: ' + data);
+      procinfo(parseInt(data, 10), function(err, processData) {
+        ngineer._pid = processData.pids[0];
+        ngineer.online = !err;
+      });
+    }
 
-        // watch the appropriate location and trigger a reread when something changes
-        fs.watch(watchTarget, function(evt, filename) {
-            this.close();
-            ngineer._readPID(opts);
-        });
+    // watch the appropriate location and trigger a reread when something changes
+    fs.watch(watchTarget, function(evt, filename) {
+      this.close();
+      ngineer._readPID(opts);
     });
+  });
 };
 
 /* Ngineer properties */
 
 Object.defineProperty(Ngineer.prototype, 'online', {
-    get: function() {
-        return this._online;
-    },
+  get: function() {
+    return this._online;
+  },
 
-    set: function(value) {
-        // only update if we are toggling the state
-        if (value !== this._online) {
-            this._online = value;
-            this.emit(value ? 'online' : 'offline');
-        }
+  set: function(value) {
+    // only update if we are toggling the state
+    if (value !== this._online) {
+      this._online = value;
+      this.emit(value ? 'online' : 'offline');
     }
+  }
 });
-
-
-module.exports = function(basePath) {
-    return new Ngineer(basePath);
-};
