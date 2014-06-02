@@ -2,7 +2,7 @@
   "name": "ngineer",
   "description": "Generate proxy routes for nginx",
   "author": "Damon Oehlman <damon.oehlman@gmail.com>",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "dependencies": {
     "async": "~0.9",
     "debug": "*",
