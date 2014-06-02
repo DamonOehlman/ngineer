@@ -33,6 +33,13 @@ var debug = require('debug')('ngineer'),
 
   - [nginx-http-proxy](https://github.com/liamoehlman/nginx-http-proxy)
 
+  ## Alternative Projects
+
+  Before using `ngineer` you should consider also consider the following
+  projects (in addition to those listed in Prior Art):
+
+  - [nginx-vhosts](https://github.com/maxogden/nginx-vhosts)
+
 **/
 
 function Ngineer(basePath, opts) {
