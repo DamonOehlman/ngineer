@@ -17,16 +17,27 @@ The following example shows how the `ngineer` module can be used to scaffold and
 
 ```js
 var async = require('async');
-var nginx = require('ngineer')(__dirname + '/demo', {
+var nginx = require('ngineer')(__dirname + '/nginx', {
   port: 8080
 });
+var express = require('express');
+var app = express();
+
+// create our simple express app
+app.get('/', function(req, res) {
+  res.end('Hi there');
+});
+app.listen(3000);
 
 async.series([ nginx.scaffold, nginx.start ], function(err) {
   if (err) {
     return console.error(err);
   }
 
-  console.log('started nginx, pid: ' + nginx.pid);
+  nginx.location('/express-test').proxy('http://localhost:3000/').save(function(err) {
+    console.log('started nginx, pid: ' + nginx.pid);
+    console.log('express app available at http://localhost:8080/express-test');
+  });
 });
 
 ```
@@ -95,22 +106,14 @@ configuration.
 
 Attempt to start nginx by using a few well known nginx binary locations.
 
-### NginxLocation
+### location(pattern)
 
-The NginxLocation class is used to define information regarding an nginx
-location directive.
-
-#### directive(args*)
+Create a location section for the nginx configuraton.
 
 #### proxy(targetUrl)
 
 Include a [proxy_pass](http://wiki.nginx.org/HttpProxyModule#proxy_pass)
 directive into the location
-
-#### save(callback)
-
-The save method is used to write the location file in the /locations path
-in the server/conf directory
 
 ## License(s)
 
