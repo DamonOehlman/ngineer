@@ -9,7 +9,7 @@ ngineer is a node automation later for nginx that assists with the following:
 
 [![NPM](https://nodei.co/npm/ngineer.png)](https://nodei.co/npm/ngineer/)
 
-[![experimental](https://img.shields.io/badge/stability-experimental-red.svg)](https://github.com/badges/stability-badges) [![Build Status](https://img.shields.io/travis/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer) [![Dependency Status](https://david-dm.org/DamonOehlman/ngineer.svg)](https://david-dm.org/DamonOehlman/ngineer) 
+[![unstable](https://img.shields.io/badge/stability-unstable-yellowgreen.svg)](https://github.com/badges/stability-badges) [![Build Status](https://img.shields.io/travis/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer) [![Dependency Status](https://david-dm.org/DamonOehlman/ngineer.svg)](https://david-dm.org/DamonOehlman/ngineer) 
 
 ## Getting Started
 
@@ -125,6 +125,11 @@ Create a new location directive for the nginx configuration
 
 The reload method sends the reload configuration (HUP) signal to the nginx process.
 
+#### reset()
+
+The reset function cleans out the config directory and stops the nginx running if
+is running.
+
 #### scaffold(callback)
 
 Scaffold an nginx configuration directory based on a known default
@@ -133,6 +138,11 @@ configuration.
 #### start(callback)
 
 Attempt to start nginx by using a few well known nginx binary locations.
+
+#### stop(callback)
+
+
+Stop the nginx process
 
 ### location(pattern)
 
