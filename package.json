@@ -4,6 +4,7 @@
   "author": "Damon Oehlman <damon.oehlman@gmail.com>",
   "version": "0.0.3",
   "dependencies": {
+    "async": "~0.9",
     "debug": "*",
     "mkdirp": "~0.5",
     "procinfo": "~0.1"
