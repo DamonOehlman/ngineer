@@ -1,3 +1,4 @@
+var async = require('async');
 var debug = require('debug')('ngineer');
 var fs = require('fs');
 var path = require('path');
