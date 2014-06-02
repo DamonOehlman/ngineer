@@ -8,5 +8,5 @@ async.series([ nginx.scaffold, nginx.start ], function(err) {
     return console.error(err);
   }
 
-  console.log('started nginx');
+  console.log('started nginx, pid: ' + nginx.pid);
 });
