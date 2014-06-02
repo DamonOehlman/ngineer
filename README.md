@@ -6,9 +6,27 @@ locations to a server configuration by generating suitable
 separate location files that can then be included into a core `nginx.conf`
 configuration file.
 
-Additionally, ngineer communicates with the `nginx` process and sends the
-`HUP` [signal](http://wiki.nginx.org/CommandLine#Loading_a_New_Configuration_Using_Signals)
+## How it Works
+
+Ngineer expects that it will have a nginx configuration folder that it s responsible for managing (see the `-p` commandline argument).  While ngineer doesn't require that it is reponsible for running the nginx process, it is happy to do this.  If you do decide to use this option then ensure that you upstart (or similar) the node process running nginx.
+
+### Expected Traffic Flow
+
+When using ngineer it's important to note that you are probably accepting a few levels of HTTP proxying to make the magic happen.  In the case of new version of [steelmesh](https://github.com/steelmesh/steelmesh) that is under development, we are using an archictecture similar to what is displayed below:
+
+```
+   +----------------+      +----------------+      +----------------+
+   |                |+---->|                |+---->|                |
+   |     HAproxy    |      |      nginx     |      |      node      |
+   |                |<----+|                |<----+|                |
+   +----------------+      +----------------+      +----------------+
+```
+
+### Handling nginx restarts
+
+Ngineer communicates with the `nginx` process and sends the `HUP` [signal](http://wiki.nginx.org/CommandLine#Loading_a_New_Configuration_Using_Signals)
 to flag the the nginx configuration should be reloaded and nginx gracefully restarted.
+
 
 
 [![NPM](https://nodei.co/npm/ngineer.png)](https://nodei.co/npm/ngineer/)
@@ -34,6 +52,23 @@ Before using `ngineer` you should consider also consider the following
 projects (in addition to those listed in Prior Art):
 
 - [nginx-vhosts](https://github.com/maxogden/nginx-vhosts)
+
+## NginxLocation
+
+The NginxLocation class is used to define information regarding an nginx
+location directive.
+
+### directive(args*)
+
+### proxy(targetUrl)
+
+Include a [proxy_pass](http://wiki.nginx.org/HttpProxyModule#proxy_pass)
+directive into the location
+
+### save(callback)
+
+The save method is used to write the location file in the /locations path
+in the server/conf directory
 
 ## License(s)
 

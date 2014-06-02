@@ -16,9 +16,7 @@ var NginxLocation = require('./location');
   separate location files that can then be included into a core `nginx.conf`
   configuration file.
 
-  Additionally, ngineer communicates with the `nginx` process and sends the
-  `HUP` [signal](http://wiki.nginx.org/CommandLine#Loading_a_New_Configuration_Using_Signals)
-  to flag the the nginx configuration should be reloaded and nginx gracefully restarted.
+  <<< docs/howitworks.md
 
   ## Why ngineer?
 
