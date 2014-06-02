@@ -17,6 +17,10 @@ var NginxLocation = require('./location');
   separate location files that can then be included into a core `nginx.conf`
   configuration file.
 
+  ## Getting Started
+
+  <<< docs/getting-started.md
+
   ## How it Works
 
   <<< docs/howitworks.md

@@ -11,6 +11,11 @@ configuration file.
 
 [![experimental](https://img.shields.io/badge/stability-experimental-red.svg)](https://github.com/badges/stability-badges) [![Build Status](https://img.shields.io/travis/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer) [![Dependency Status](https://david-dm.org/DamonOehlman/ngineer.svg)](https://david-dm.org/DamonOehlman/ngineer) 
 
+## Getting Started
+
+To be completed
+
+
 ## How it Works
 
 Ngineer expects that it will have a nginx configuration folder that it s responsible for managing (see the `-p` commandline argument).  While ngineer doesn't require that it is reponsible for running the nginx process, it is happy to do this.  If you do decide to use this option then ensure that you upstart (or similar) the node process running nginx.
@@ -64,6 +69,10 @@ Create a new location directive for the nginx configuration
 #### reload()
 
 The reload method sends the reload configuration (HUP) signal to the nginx process.
+
+#### start(callback)
+
+Attempt to start nginx by using a few well known nginx binary locations.
 
 ### NginxLocation
 
