@@ -55,6 +55,20 @@ module.exports = function(basePath, opts) {
   var pidLocation = path.resolve(basePath, (opts || {}).pidFile || 'logs/nginx.pid');
   var pid = undefined;
 
+  function monitorProcess(targetPid) {
+    debug('looking up process information for process: ' + targetPid);
+    procinfo(targetPid, function(err, processData) {
+      pid = processData && processData.pids[0];
+      nginx.online = !err;
+
+      if (pid) {
+        setTimeout(function() {
+          monitorProcess(targetPid)
+        }, 500);
+      }
+    });
+  }
+
   function readPID() {
     // open the pid file
     debug('looking for pid file: ' + pidLocation);
@@ -71,13 +85,7 @@ module.exports = function(basePath, opts) {
       }
       // otherwise, read the file and check on the process status
       else {
-        debug('looking up process information for process: ' + data);
-        procinfo(parseInt(data, 10), function(err, processData) {
-          pid = processData && processData.pids[0];
-          nginx.online = !err;
-        });
-
-        return;
+        return monitorProcess(parseInt(data, 10));
       }
 
       // work up parent folders until we find a valid location
@@ -148,6 +156,11 @@ module.exports = function(basePath, opts) {
       if (value !== online) {
         online = value;
         nginx.emit(value ? 'online' : 'offline');
+
+        // if we have gone offline start looking for the pid again
+        if (! value) {
+          process.nextTick(readPID);
+        }
       }
     }
   });
