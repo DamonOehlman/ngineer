@@ -1,5 +1,5 @@
 var async = require('async');
-var debug = require('debug')('ngineer:start');
+var debug = require('debug')('ngineer:stop');
 var exec = require('child_process').exec;
 var path = require('path');
 var fs = require('fs');
@@ -13,7 +13,9 @@ module.exports = function(ngineer, basePath, opts) {
       }
 
       debug('running: ' + command + ' -s stop');
-      exec(command + ' -s stop', callback);
+      exec(command + ' -s stop', function() {
+        callback();
+      });
     });
   };
 };

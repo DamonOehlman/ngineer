@@ -130,6 +130,14 @@ module.exports = function(basePath, opts) {
   nginx.reload = require('./reload')(nginx, basePath, opts);
 
   /**
+    #### reset()
+
+    The reset function cleans out the config directory and stops the nginx running if
+    is running.
+  **/
+  nginx.reset = require('./reset')(nginx, basePath, opts);
+
+  /**
     #### scaffold(callback)
 
     Scaffold an nginx configuration directory based on a known default
@@ -138,12 +146,20 @@ module.exports = function(basePath, opts) {
   nginx.scaffold = require('./scaffold')(nginx, basePath, opts);
 
   /**
-  #### start(callback)
+    #### start(callback)
 
-  Attempt to start nginx by using a few well known nginx binary locations.
-
-**/
+    Attempt to start nginx by using a few well known nginx binary locations.
+  **/
   nginx.start = require('./start')(nginx, basePath, opts);
+
+
+  /**
+    #### stop(callback)
+
+
+    Stop the nginx process
+  **/
+  nginx.stop = require('./stop')(nginx, basePath, opts);
 
 
   Object.defineProperty(nginx, 'online', {
