@@ -13,7 +13,23 @@ configuration file.
 
 ## Getting Started
 
-To be completed
+The following example shows how the `ngineer` module can be used to scaffold and start nginx within an application.
+
+```js
+var async = require('async');
+var nginx = require('ngineer')(__dirname + '/demo', {
+  port: 8080
+});
+
+async.series([ nginx.scaffold, nginx.start ], function(err) {
+  if (err) {
+    return console.error(err);
+  }
+
+  console.log('started nginx');
+});
+
+```
 
 
 ## How it Works
@@ -60,7 +76,7 @@ projects (in addition to those listed in Prior Art):
 
 ## Reference
 
-### ngineer(basePath, opts) => Ngineer
+### ngineer(basePath, opts)
 
 #### location(pattern) => NginxLocation
 
@@ -69,6 +85,11 @@ Create a new location directive for the nginx configuration
 #### reload()
 
 The reload method sends the reload configuration (HUP) signal to the nginx process.
+
+#### scaffold(callback)
+
+Scaffold an nginx configuration directory based on a known default
+configuration.
 
 #### start(callback)
 
