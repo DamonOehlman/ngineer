@@ -143,6 +143,12 @@ module.exports = function(basePath, opts) {
     }
   });
 
+  Object.defineProperty(nginx, 'pid', {
+    get: function() {
+      return pid;
+    }
+  });
+
   nginx.locationPath = (opts || {}).locationPath || path.resolve(basePath, 'conf', 'locations');
   readPID();
 
