@@ -20,7 +20,7 @@ module.exports = function(nginx, basePath, opts) {
             return callback(err);
           }
 
-          setTimeout(callback, (opts || {}).reloadDelay || 50);
+          setTimeout(callback, (opts || {}).reloadDelay || 500);
         });
       });
     });
