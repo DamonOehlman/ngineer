@@ -14,7 +14,14 @@ module.exports = function(nginx, basePath, opts) {
           return callback(err);
         }
 
-        exec(command + ' -s reload', callback);
+        debug('reloading nginx config: ' + command + ' -s reload');
+        exec(command + ' -s reload', function(err) {
+          if (err) {
+            return callback(err);
+          }
+
+          setTimeout(callback, (opts || {}).reloadDelay || 50);
+        });
       });
     });
   };
