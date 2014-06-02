@@ -6,6 +6,11 @@ locations to a server configuration by generating suitable
 separate location files that can then be included into a core `nginx.conf`
 configuration file.
 
+
+[![NPM](https://nodei.co/npm/ngineer.png)](https://nodei.co/npm/ngineer/)
+
+[![experimental](https://img.shields.io/badge/stability-experimental-red.svg)](https://github.com/badges/stability-badges) [![Build Status](https://img.shields.io/travis/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer) [![Dependency Status](https://david-dm.org/DamonOehlman/ngineer.svg)](https://david-dm.org/DamonOehlman/ngineer) 
+
 ## How it Works
 
 Ngineer expects that it will have a nginx configuration folder that it s responsible for managing (see the `-p` commandline argument).  While ngineer doesn't require that it is reponsible for running the nginx process, it is happy to do this.  If you do decide to use this option then ensure that you upstart (or similar) the node process running nginx.
@@ -27,11 +32,6 @@ When using ngineer it's important to note that you are probably accepting a few 
 Ngineer communicates with the `nginx` process and sends the `HUP` [signal](http://wiki.nginx.org/CommandLine#Loading_a_New_Configuration_Using_Signals)
 to flag the the nginx configuration should be reloaded and nginx gracefully restarted.
 
-
-
-[![NPM](https://nodei.co/npm/ngineer.png)](https://nodei.co/npm/ngineer/)
-
-[![experimental](https://img.shields.io/badge/stability-experimental-red.svg)](https://github.com/badges/stability-badges) [![Build Status](https://img.shields.io/travis/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer) [![Dependency Status](https://david-dm.org/DamonOehlman/ngineer.svg)](https://david-dm.org/DamonOehlman/ngineer) 
 
 ## Why ngineer?
 
