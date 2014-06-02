@@ -7,16 +7,13 @@ var config = require('./config');
 
 module.exports = function(ngineer, basePath, opts) {
   return function(callback) {
-    async.filter(config.executables, fs.exists, function(results) {
-      var command = results[0] + ' -p ' + basePath + '/ -c conf/nginx.conf -s stop';
-
-      if (results.length === 0) {
-        return callback(new Error('no nginx executable found'));
+    config.command(basePath, function(err, command) {
+      if (err) {
+        return callback(err);
       }
 
-      debug('running: ' + command);
-      exec(command, callback);
+      debug('running: ' + command + ' -s stop');
+      exec(command + ' -s stop', callback);
     });
   };
-
 };

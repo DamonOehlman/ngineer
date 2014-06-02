@@ -108,9 +108,7 @@ module.exports = function(basePath, opts) {
     The reload method sends the reload configuration (HUP) signal to the nginx process.
 
   **/
-  nginx.reload = function(callback) {
-    exec('kill -s HUP ' + pid, callback);
-  };
+  nginx.reload = require('./reload')(nginx, basePath, opts);
 
   /**
     #### scaffold(callback)
