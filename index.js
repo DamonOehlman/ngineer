@@ -60,7 +60,7 @@ module.exports = function(basePath, opts) {
     // open the pid file
     debug('looking for pid file: ' + pidLocation);
     fs.readFile(pidLocation, 'utf8', function(err, data) {
-      var watchTarget = err ? path.dirname(pidLocation) : pidLocation;
+      var watchTarget = pidLocation;
 
       // if we hit an error opening the file, then the pid file does not exist
       // therefore we will assume that nginx is not running
@@ -77,6 +77,11 @@ module.exports = function(basePath, opts) {
           pid = processData.pids[0];
           nginx.online = !err;
         });
+      }
+
+      // work up parent folders until we find a valid location
+      while (! fs.existsSync(watchTarget)) {
+        watchTarget = path.dirname(watchTarget);
       }
 
       // watch the appropriate location and trigger a reread when something changes
