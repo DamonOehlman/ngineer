@@ -74,7 +74,7 @@ module.exports = function(basePath, opts) {
       else {
         debug('looking up process information for process: ' + data);
         procinfo(parseInt(data, 10), function(err, processData) {
-          pid = processData.pids[0];
+          pid = processData && processData.pids[0];
           nginx.online = !err;
         });
       }
