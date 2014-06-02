@@ -76,6 +76,8 @@ module.exports = function(basePath, opts) {
           pid = processData && processData.pids[0];
           nginx.online = !err;
         });
+
+        return;
       }
 
       // work up parent folders until we find a valid location
