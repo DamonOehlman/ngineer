@@ -53,19 +53,31 @@ projects (in addition to those listed in Prior Art):
 
 - [nginx-vhosts](https://github.com/maxogden/nginx-vhosts)
 
-## NginxLocation
+## Reference
+
+### ngineer(basePath, opts) => Ngineer
+
+#### location(pattern) => NginxLocation
+
+Create a new location directive for the nginx configuration
+
+#### reload()
+
+The reload method sends the reload configuration (HUP) signal to the nginx process.
+
+### NginxLocation
 
 The NginxLocation class is used to define information regarding an nginx
 location directive.
 
-### directive(args*)
+#### directive(args*)
 
-### proxy(targetUrl)
+#### proxy(targetUrl)
 
 Include a [proxy_pass](http://wiki.nginx.org/HttpProxyModule#proxy_pass)
 directive into the location
 
-### save(callback)
+#### save(callback)
 
 The save method is used to write the location file in the /locations path
 in the server/conf directory

@@ -40,6 +40,10 @@ var NginxLocation = require('./location');
 
   - [nginx-vhosts](https://github.com/maxogden/nginx-vhosts)
 
+  ## Reference
+
+  ### ngineer(basePath, opts) => Ngineer
+
 **/
 
 function Ngineer(basePath, opts) {
@@ -75,15 +79,22 @@ function Ngineer(basePath, opts) {
 util.inherits(Ngineer, events.EventEmitter);
 module.exports = Ngineer;
 
+/**
+  #### location(pattern) => NginxLocation
+
+  Create a new location directive for the nginx configuration
+
+**/
 Ngineer.prototype.location = function(pattern) {
   return new NginxLocation(pattern, this);
 };
 
 /**
-## reload()
+  #### reload()
 
-The reload method sends the reload configuration (HUP) signal to the nginx process.
-*/
+  The reload method sends the reload configuration (HUP) signal to the nginx process.
+
+**/
 Ngineer.prototype.reload = function(callback) {
   exec('kill -s HUP ' + this._pid, callback);
 };

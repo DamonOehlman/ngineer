@@ -5,7 +5,7 @@ var reStripChars = /(^\/|\s|\/$)/g;
 var reToUnderscore = /\//;
 
 /**
-  ## NginxLocation
+  ### NginxLocation
 
   The NginxLocation class is used to define information regarding an nginx
   location directive.
@@ -33,7 +33,7 @@ module.exports = NginxLocation;
 var prot = NginxLocation.prototype;
 
 /**
-  ### directive(args*)
+  #### directive(args*)
 
 **/
 prot.directive = function() {
@@ -42,7 +42,7 @@ prot.directive = function() {
 };
 
 /**
-  ### proxy(targetUrl)
+  #### proxy(targetUrl)
 
   Include a [proxy_pass](http://wiki.nginx.org/HttpProxyModule#proxy_pass)
   directive into the location
@@ -52,7 +52,7 @@ prot.proxy = function(targetUrl) {
 };
 
 /**
-  ### save(callback)
+  #### save(callback)
 
   The save method is used to write the location file in the /locations path
   in the server/conf directory
