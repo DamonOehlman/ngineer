@@ -6,7 +6,6 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var procinfo = require('procinfo');
 var exec = require('child_process').exec;
-var NginxLocation = require('./location');
 
 /**
   # ngineer
@@ -106,7 +105,10 @@ module.exports = function(basePath, opts) {
 
   **/
   nginx.location = function(pattern) {
-    return new NginxLocation(pattern, nginx);
+    var section = require('./sections/location')(nginx, basePath, opts);
+
+    section.pattern = pattern;
+    return section;
   };
 
   /**
@@ -154,7 +156,7 @@ module.exports = function(basePath, opts) {
     }
   });
 
-  nginx.locationPath = (opts || {}).locationPath || path.resolve(basePath, 'conf', 'locations');
+  nginx.basePath = basePath;
   readPID();
 
   return nginx;
