@@ -1,10 +1,10 @@
 # ngineer
 
-ngineer is a node utility library that assists with dynamically adding
-locations to a server configuration by generating suitable
-[location](http://wiki.nginx.org/HttpCoreModule#location) directives in
-separate location files that can then be included into a core `nginx.conf`
-configuration file.
+ngineer is a node automation later for nginx that assists with the following:
+
+- scaffolding a new nginx configuration folder (i.e. `conf/`, `html/`, `logs/`)
+- starting and reloading nginx using targeted base path
+- adding location proxy directives
 
 
 [![NPM](https://nodei.co/npm/ngineer.png)](https://nodei.co/npm/ngineer/)
@@ -26,7 +26,7 @@ async.series([ nginx.scaffold, nginx.start ], function(err) {
     return console.error(err);
   }
 
-  console.log('started nginx');
+  console.log('started nginx, pid: ' + nginx.pid);
 });
 
 ```
