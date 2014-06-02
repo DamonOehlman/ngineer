@@ -1,4 +1,5 @@
 var ngineer = require('../../'),
+    EventEmitter = require('events').EventEmitter,
     path = require('path'),
     assert = require('assert'),
     exec = require('child_process').exec,
@@ -16,7 +17,7 @@ describe('start nginx', function() {
 
   it('should be able to create an ngineer instance', function() {
     instance = ngineer(nginx.path);
-    assert(instance instanceof ngineer);
+    assert(instance instanceof EventEmitter);
   });
 
   it('should be able to start nginx', function(done) {
