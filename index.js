@@ -46,6 +46,11 @@ var NginxLocation = require('./location');
 
 **/
 
+var NGINX_EXECUTABLES = [
+  path.resolve('nginx'),
+  '/usr/sbin/nginx'
+];
+
 function Ngineer(basePath, opts) {
   if (! (this instanceof Ngineer)) {
     return new Ngineer(basePath, opts);
@@ -97,6 +102,40 @@ Ngineer.prototype.location = function(pattern) {
 **/
 Ngineer.prototype.reload = function(callback) {
   exec('kill -s HUP ' + this._pid, callback);
+};
+
+/**
+  #### start(callback)
+
+  Attempt to start nginx by using a few well known nginx binary locations.
+
+**/
+Ngineer.prototype.start = function(callback) {
+  var ngineer = this;
+
+  async.filter(NGINX_EXECUTABLES, fs.exists, function(results) {
+    var command = results[0] + ' -p ' + ngineer.basePath + '/ -c conf/nginx.conf';
+
+    if (results.length === 0) {
+      return callback(new Error('no nginx executable found'));
+    }
+
+    // if already online do nothing
+    if (ngineer.online) {
+      return callback();
+    }
+
+    debug('running: ' + command);
+    exec(command, function(err) {
+      debug('started: ', err);
+
+      if (err) {
+        return callback(err);
+      }
+
+      setTimeout(callback, 1000);
+    });
+  });
 };
 
 /* internal methods */
