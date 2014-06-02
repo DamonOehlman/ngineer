@@ -6,23 +6,30 @@ var fs = require('fs');
 var config = require('./config');
 
 module.exports = function(ngineer, basePath, opts) {
-  var startTimeout;
   var command;
 
   function nginxStart(callback) {
-    return function() {
-      debug('running: ' + command);
-      exec(command, function(err) {
-        debug('started: ', err);
+    debug('running: ' + command);
+    exec(command, function(err) {
+      debug('started: ', err);
 
-        if (err) {
-          return callback(err);
-        }
-      });
-    }
+      if (err) {
+        return callback(err);
+      }
+
+      callback();
+    });
   }
 
   return function(callback) {
+    var startTimeout;
+
+    function handleOnline() {
+      debug('detected nginx online');
+      clearTimeout(startTimeout);
+      callback();
+    }
+
     async.filter(config.executables, fs.exists, function(results) {
       command = results[0] + ' -p ' + basePath + '/ -c conf/nginx.conf';
 
@@ -35,12 +42,12 @@ module.exports = function(ngineer, basePath, opts) {
         return callback();
       }
 
-      ngineer.once('online', function() {
-        clearTimeout(startTimeout);
-        callback();
-      });
+      ngineer.once('online', handleOnline);
 
-      startTimeout = setTimeout(nginxStart(callback), 500);
+      startTimeout = setTimeout(function() {
+        ngineer.removeListener('online', handleOnline);
+        nginxStart(callback);
+      }, 500);
     });
   };
 
