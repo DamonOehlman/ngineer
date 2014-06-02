@@ -84,10 +84,17 @@ module.exports = function(basePath, opts) {
         watchTarget = path.dirname(watchTarget);
       }
 
+      // if the pid file has since been created read it again
+      if (watchTarget === pidLocation) {
+        return process.nextTick(readPID);
+      }
+
       // watch the appropriate location and trigger a reread when something changes
+      debug('watching: ' + watchTarget);
       fs.watch(watchTarget, function(evt, filename) {
+        debug('target "' + watchTarget + '" changed');
         this.close();
-        readPID(opts);
+        readPID();
       });
     });
   }
