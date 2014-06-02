@@ -4,14 +4,9 @@ var path = require('path');
 var fs = require('fs');
 
 module.exports = function(nginx, basePath, opts) {
-  var section = {};
   var directives = [];
 
-  section.directive = function() {
-    directives.push([].slice.call(arguments));
-  };
-
-  section.save = function(callback) {
+  function section(callback) {
     var filename = path.join(basePath, 'conf', section.filename);
 
     // if the section doesn't have a filename, then do nothing
@@ -33,7 +28,13 @@ module.exports = function(nginx, basePath, opts) {
         nginx.reload(callback);
       });
     });
+  }
+
+  section.directive = function() {
+    directives.push([].slice.call(arguments));
   };
+
+  section.save = section;
 
   Object.defineProperty(section, 'directives', {
     get: function() {
