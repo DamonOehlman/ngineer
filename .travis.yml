@@ -1,10 +1,15 @@
 language: node_js
 node_js:
-- 0.10
+- 6
+- 7
+- 8
+
+addons:
+  apt:
+    packages:
+    - nginx
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install nginx
   - sudo touch /var/log/nginx/error.log
   - sudo chmod a+rw /var/log/nginx/error.log
   - sudo chmod a+rw /var/lib/nginx

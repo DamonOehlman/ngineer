@@ -1,11 +1,23 @@
-var debug = require('debug')('ngineer:tests');
-var path = require('path'),
-    exec = require('child_process').exec,
-    serverPath = path.resolve(__dirname, '..', 'integration', 'server'),
-    nginxCommand = '/usr/sbin/nginx -p ' + serverPath + '/ -c conf/nginx.conf';
+const debug = require('debug')('ngineer:tests');
+const path = require('path');
+const fs = require('fs');
+const { exec } = require('child_process');
+
+const nginxExecutable = [
+  '/usr/sbin/nginx',
+  '/usr/local/bin/nginx'
+].filter(file => fs.existsSync(file))[0];
+const serverPath = path.resolve(__dirname, '..', 'integration', 'server');
+const nginxCommand = `${nginxExecutable} -p ${serverPath}/ -c conf/nginx.conf`;
 
 function nginx(command) {
   return function(callback) {
+    callback = callback || function() {};
+
+    if (!nginxExecutable) {
+      return callback(new Error('nginx not found on machine'));
+    }
+
     debug('running: ' + command);
     exec(command, function(err) {
       debug('started: ', err);
@@ -21,5 +33,5 @@ function nginx(command) {
 
 exports.path = serverPath;
 exports.start = nginx(nginxCommand);
-exports.stop = nginx(nginxCommand + ' -s stop');
+exports.stop = nginx(`${nginxCommand} -s stop`);
 exports.url = 'http://localhost:8886';
