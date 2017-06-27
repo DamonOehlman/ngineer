@@ -3,6 +3,7 @@
   "description": "Generate proxy routes for nginx",
   "author": "Damon Oehlman <damon.oehlman@gmail.com>",
   "version": "0.3.0",
+  "stability": "unstable",
   "dependencies": {
     "async": "^2.5.0",
     "debug": "^2.6.8",
