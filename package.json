@@ -4,17 +4,17 @@
   "author": "Damon Oehlman <damon.oehlman@gmail.com>",
   "version": "0.3.0",
   "dependencies": {
-    "async": "~0.9",
-    "debug": "*",
+    "async": "^2.5.0",
+    "debug": "^2.6.8",
     "mkdirp": "~0.5",
     "procinfo": "~0.1",
-    "replacestream": "~0.1"
+    "replacestream": "^4.0.2"
   },
   "devDependencies": {
     "express": "^4",
-    "mocha": "^1",
+    "mocha": "^3.4.2",
     "rimraf": "^2",
-    "supertest": "~0.12"
+    "supertest": "^3.0.0"
   },
   "repository": {
     "type": "git",
