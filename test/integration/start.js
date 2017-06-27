@@ -1,18 +1,19 @@
-var ngineer = require('../../'),
-    EventEmitter = require('events').EventEmitter,
-    path = require('path'),
-    assert = require('assert'),
-    exec = require('child_process').exec,
-    testServer = require('../helpers/test-server'),
-    nginx = require('../helpers/nginx'),
-    request = require('supertest'),
-    rimraf = require('rimraf'),
-    instance;
+const ngineer = require('../../');
+const { EventEmitter } = require('events');
+const path = require('path');
+const assert = require('assert');
+const { exec } = require('child_process');
+const testServer = require('../helpers/test-server');
+const nginx = require('../helpers/nginx');
+const request = require('supertest');
+const rimraf = require('rimraf');
 
 // bind the request arg
 // request = request.bind(request, 'http://localhost:8886');
 
 describe('start nginx', function() {
+  let instance;
+
   after(nginx.stop);
 
   it('should be able to create an ngineer instance', function() {

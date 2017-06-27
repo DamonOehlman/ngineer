@@ -1,38 +1,39 @@
-var async = require('async');
-var fs = require('fs');
-var path = require('path');
-var possibleExecutables = exports.executables = [
+const async = require('async');
+const fs = require('fs');
+const path = require('path');
+
+const possibleExecutables = exports.executables = [
   path.resolve('nginx'),
-  '/usr/sbin/nginx'
+  '/usr/sbin/nginx',
+  '/usr/local/bin/nginx'
 ];
 
 exports.command = function(basePath, callback) {
-  async.filter(possibleExecutables, fs.exists, function(executables) {
-    async.map(executables, fs.stat, function(err, results) {
-      if (err) {
-        return callback(err);
-      }
+  const existingFiles = possibleExecutables.filter(fs.existsSync);
 
-      // find the first result that is a file
-      results = results
-        .map(function(stats, idx) {
-          return {
-            stats: stats,
-            executable: executables[idx]
-          };
-        })
-        .filter(function(data) {
-          return data.stats.isFile();
-        });
+  async.map(
+    existingFiles,
+    (executable, cb) => fs.stat(executable, cb),
+    findFirstFile
+  );
 
-      if (results.length === 0) {
-        return callback(new Error('No nginx executable found'));
-      }
+  function findFirstFile(err, results) {
+    if (err) {
+      return callback(err);
+    }
 
-      callback(
-        null,
-        results[0].executable + ' -p ' + basePath + '/ -c conf/nginx.conf'
-      );
-    });
-  });
+    // find the first result that is a file
+    results = results
+      .map((stats, idx) => ({
+        stats: stats,
+        executable: existingFiles[idx]
+      }))
+      .filter(data => data.stats.isFile());
+
+    if (results.length === 0) {
+      return callback(new Error('No nginx executable found'));
+    }
+
+    callback(null, `${results[0].executable} -p ${basePath}/ -c conf/nginx.conf`);
+  }
 };

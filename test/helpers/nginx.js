@@ -12,6 +12,8 @@ const nginxCommand = `${nginxExecutable} -p ${serverPath}/ -c conf/nginx.conf`;
 
 function nginx(command) {
   return function(callback) {
+    callback = callback || function() {};
+
     if (!nginxExecutable) {
       return callback(new Error('nginx not found on machine'));
     }
@@ -31,5 +33,5 @@ function nginx(command) {
 
 exports.path = serverPath;
 exports.start = nginx(nginxCommand);
-exports.stop = nginx(nginxCommand + ' -s stop');
+exports.stop = nginx(`${nginxCommand} -s stop`);
 exports.url = 'http://localhost:8886';
