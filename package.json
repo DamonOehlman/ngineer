@@ -9,7 +9,8 @@
     "debug": "^2.6.8",
     "mkdirp": "~0.5",
     "procinfo": "~0.1",
-    "replacestream": "^4.0.2"
+    "replacestream": "^4.0.2",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "express": "^4",
@@ -26,7 +27,9 @@
   },
   "scripts": {
     "test": "mocha test/integration --reporter spec -t 5s",
-    "gendocs": "gendocs > README.md"
+    "gendocs": "gendocs > README.md",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "main": "index.js",
   "directories": {
@@ -36,5 +39,6 @@
     "nginx",
     "automation"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "snyk": true
 }
