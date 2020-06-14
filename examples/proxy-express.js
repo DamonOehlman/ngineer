@@ -1,10 +1,9 @@
-var async = require('async');
-var express = require('express');
+const async = require('async');
+const express = require('express');
 
-var nginx = require('..')(__dirname + '/nginx', {
+const nginx = require('..')(__dirname + '/nginx', {
   port: 8080
 });
-var proxy = nginx.location('/express-test').proxy('http://localhost:3000/');
 
 // create our simple express app
 express()
@@ -16,7 +15,11 @@ express()
       return console.error('could not start bind express app to port 3000', err);
     }
 
-    async.series([ nginx.scaffold, nginx.start, proxy ], function(err) {
+    async.series([
+      nginx.scaffold,
+      nginx.start,
+      nginx.location('/express-test').proxy('http://localhost:3000/')
+    ], function(err) {
       if (err) {
         return console.error(err);
       }
@@ -26,3 +29,4 @@ express()
     });
   });
 
+nginx.stopOnExit();

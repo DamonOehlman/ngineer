@@ -1,5 +1,5 @@
-var server = require('http').createServer(function(req, res) {
-  res.end('Test Server')
-})
+const { createServer } = require('http');
 
-module.exports = server
+exports.createTestServer = () => createServer((req, res) => {
+  res.end('Test Server');
+});

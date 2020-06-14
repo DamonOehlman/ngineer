@@ -1,62 +1,22 @@
-var async = require('async');
-var debug = require('debug')('ngineer');
-var fs = require('fs');
-var path = require('path');
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
-var procinfo = require('procinfo');
-var exec = require('child_process').exec;
+const async = require('async');
+const debug = require('debug')('ngineer');
+const fs = require('fs');
+const path = require('path');
+const EventEmitter = require('events').EventEmitter;
+const util = require('util');
+const procinfo = require('procinfo');
+const exec = require('child_process').exec;
 
-/**
-  # ngineer
+const createLocation = require('./sections/location');
 
-  ngineer is a node automation later for nginx that assists with the following:
-
-  - scaffolding a new nginx configuration folder (i.e. `conf/`, `html/`, `logs/`)
-  - starting and reloading nginx using targeted base path
-  - adding location proxy directives
-
-  ## Getting Started
-
-  <<< docs/getting-started.md
-
-  ## How it Works
-
-  <<< docs/howitworks.md
-
-  ## Why ngineer?
-
-  Why do you want this?  Well, because `nginx` does a kick arse job of serving
-  static files and also proxying services so it makes sense you use it over
-  pure node alternatives such as [node-http-proxy](https://github.com/nodejitsu/node-http-proxy).
-  No offense is meant to the awesome [nodejitsu](nodejitsu.com) team here, but
-  I feel much more comfortable using nginx over node to be the first line in
-  serving both node applications and static content.
-
-  ## Prior Art
-
-  - [nginx-http-proxy](https://github.com/liamoehlman/nginx-http-proxy)
-
-  ## Alternative Projects
-
-  Before using `ngineer` you should consider also consider the following
-  projects (in addition to those listed in Prior Art):
-
-  - [nginx-vhosts](https://github.com/maxogden/nginx-vhosts)
-
-  ## Reference
-
-  ### ngineer(basePath, opts)
-
-**/
 module.exports = function(basePath, opts) {
-  var nginx = new EventEmitter();
-  var online = false;
-  var pidLocation = path.resolve(basePath, (opts || {}).pidFile || 'logs/nginx.pid');
-  var pid = undefined;
+  const nginx = new EventEmitter();
+  const pidLocation = path.resolve(basePath, (opts || {}).pidFile || 'logs/nginx.pid');
+  let online = false;
+  let pid;
 
   function monitorProcess(targetPid) {
-    debug('looking up process information for process: ' + targetPid);
+    debug(`looking up process information for process: ${targetPid}`);
     procinfo(targetPid, function(err, processData) {
       pid = processData && processData.pids[0];
       nginx.online = !err;
@@ -71,9 +31,9 @@ module.exports = function(basePath, opts) {
 
   function readPID() {
     // open the pid file
-    debug('looking for pid file: ' + pidLocation);
+    debug(`looking for pid file: ${pidLocation}`);
     fs.readFile(pidLocation, 'utf8', function(err, data) {
-      var watchTarget = pidLocation;
+      let watchTarget = pidLocation;
 
       // if we hit an error opening the file, then the pid file does not exist
       // therefore we will assume that nginx is not running
@@ -82,14 +42,20 @@ module.exports = function(basePath, opts) {
         if (nginx.online) {
           nginx.online = false;
         }
-      }
-      // otherwise, read the file and check on the process status
-      else {
-        return monitorProcess(parseInt(data, 10));
+      } else {
+        const filePid = parseInt(data, 10);
+
+        // file exists but pid is not yet valid
+        if (isNaN(filePid)) {
+          return process.nextTick(readPID);
+        }
+
+        // otherwise, read the file and check on the process status
+        return monitorProcess(filePid);
       }
 
       // work up parent folders until we find a valid location
-      while (! fs.existsSync(watchTarget)) {
+      while (!fs.existsSync(watchTarget)) {
         watchTarget = path.dirname(watchTarget);
       }
 
@@ -98,11 +64,21 @@ module.exports = function(basePath, opts) {
         return process.nextTick(readPID);
       }
 
+      // check that we can read the file (avoid potential race condition with scaffolding)
+      try {
+        fs.accessSync(watchTarget, fs.constants.R_OK);
+      } catch (e) {
+        debug(`no read access to ${watchTarget}, sleeping 500ms`);
+        setTimeout(readPID, 500);
+        return;
+      }
+
       // watch the appropriate location and trigger a reread when something changes
-      debug('watching: ' + watchTarget);
-      fs.watch(watchTarget, function(evt, filename) {
-        debug('target "' + watchTarget + '" changed');
-        this.close();
+      debug(`watching: ${watchTarget}`);
+      const watcher = fs.watch(watchTarget, { persistent: false });
+      watcher.once('change', () => {
+        debug(`target "${watchTarget}" changed`);
+        watcher.close();
         readPID();
       });
     });
@@ -114,12 +90,10 @@ module.exports = function(basePath, opts) {
     Create a new location directive for the nginx configuration
 
   **/
-  nginx.location = function(pattern) {
-    var section = require('./sections/location')(nginx, basePath, opts);
-
-    section.pattern = pattern;
-    return section;
-  };
+  nginx.location = pattern => createLocation(nginx, basePath, {
+    ...opts,
+    pattern,
+  });
 
   /**
     #### reload()
@@ -160,7 +134,7 @@ module.exports = function(basePath, opts) {
     Stop the nginx process
   **/
   nginx.stop = require('./stop')(nginx, basePath, opts);
-
+  nginx.stopOnExit = require('./stop-on-exit')(nginx);
 
   Object.defineProperty(nginx, 'online', {
     get: function() {

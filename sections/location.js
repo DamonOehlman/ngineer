@@ -1,25 +1,14 @@
-var mkdirp = require('mkdirp');
-var fs = require('fs');
-var path = require('path');
-var reStripChars = /(^\/|\s|\/$)/g;
-var reToUnderscore = /\//;
+const debug = require('debug')('ngineer:section:location');
+const reStripChars = /(^\/|\s|\/$)/g;
+const reToUnderscore = /\//;
+const createSection = require('./base');
 
-/**
-  ### location(pattern)
+module.exports = function(nginx, basePath, { pattern, ...opts }) {
+  debug(`creating location section, pattern: ${pattern}`)
 
-  Create a location section for the nginx configuraton.
+  const section = createSection(nginx, basePath, opts);
 
-**/
-module.exports = function(nginx, basePath, opts) {
-  var section = require('./base')(nginx, basePath, opts);
-  var pattern;
-
-  /**
-    #### proxy(targetUrl)
-
-    Include a [proxy_pass](http://wiki.nginx.org/HttpProxyModule#proxy_pass)
-    directive into the location
-  **/
+  section.filename = `locations/${pattern.replace(reStripChars, '').replace(reToUnderscore, '_')}`;
   section.proxy = function(targetUrl, opts) {
     section.directive('proxy_pass', targetUrl);
     section.directive('proxy_http_version', (opts || {}).httpVersion || '1.1');
@@ -29,24 +18,10 @@ module.exports = function(nginx, basePath, opts) {
     return section;
   };
 
-  Object.defineProperty(section, 'pattern', {
-    set: function(value) {
-      pattern = value;
-
-      // set the filename for the configuration section
-      section.filename = 'locations/' +
-        pattern.replace(reStripChars, '').replace(reToUnderscore, '_');
-    }
-  });
-
   Object.defineProperty(section, 'output', {
     get: function() {
-      var lines = section.directives.map(function(parts) {
-        return '  ' + parts.join(' ') + ';';
-      });
-
-      // generate the output
-      return 'location ' + pattern + ' {\n' + lines.join('\n') + '\n}\n';
+      const lines = section.directives.map(parts => ` ${parts.join(' ')};`);
+      return `location ${pattern} {\n${lines.join('\n')}\n}\n`;
     }
   });
 

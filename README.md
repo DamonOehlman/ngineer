@@ -1,24 +1,22 @@
-
 # ngineer
 
 ngineer is a node automation later for nginx that assists with the following:
 
-- scaffolding a new nginx configuration folder (i.e. `conf/`, `html/`, `logs/`)
-- starting and reloading nginx using targeted base path
-- adding location proxy directives
-
+* scaffolding a new nginx configuration folder (i.e. `conf/`, `html/`, `logs/`)
+* starting and reloading nginx using targeted base path
+* adding location proxy directives
 
 [![NPM](https://nodei.co/npm/ngineer.png)](https://nodei.co/npm/ngineer/)
 
-[![unstable](https://img.shields.io/badge/stability-unstable-yellowgreen.svg)](https://github.com/dominictarr/stability#unstable) [![Build Status](https://api.travis-ci.org/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer) [![bitHound Score](https://www.bithound.io/github/DamonOehlman/ngineer/badges/score.svg)](https://www.bithound.io/github/DamonOehlman/ngineer) 
+[![unstable](https://img.shields.io/badge/stability-unstable-yellowgreen.svg)](https://github.com/dominictarr/stability#unstable) [![Build Status](https://api.travis-ci.org/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer)
 
 ## Getting Started
 
 The following example shows how the `ngineer` module can be used to scaffold and start nginx within an application.
 
 ```js
-var async = require('async');
-var nginx = require('ngineer')(__dirname + '/nginx', {
+const async = require('async');
+const nginx = require('..')(__dirname + '/nginx', {
   port: 8080
 });
 
@@ -35,18 +33,18 @@ async.series([
   console.log('proxying google at http://localhost:8080/ngineer');
 });
 
+nginx.stopOnExit();
 ```
 
-The above example proxies a request from http://localhost:8080/ngineer through to https://github.com/DamonOehlman/ngineer.  A more practical example is shown below where we proxy a local [express](https://github.com/visionmedia/express) application through nginx.
+The above example proxies a request from <http://localhost:8080/ngineer> through to <https://github.com/DamonOehlman/ngineer>.  A more practical example is shown below where we proxy a local [express](https://github.com/visionmedia/express) application through nginx.
 
 ```js
-var async = require('async');
-var express = require('express');
+const async = require('async');
+const express = require('express');
 
-var nginx = require('ngineer')(__dirname + '/nginx', {
+const nginx = require('..')(__dirname + '/nginx', {
   port: 8080
 });
-var proxy = nginx.location('/express-test').proxy('http://localhost:3000/');
 
 // create our simple express app
 express()
@@ -58,7 +56,11 @@ express()
       return console.error('could not start bind express app to port 3000', err);
     }
 
-    async.series([ nginx.scaffold, nginx.start, proxy ], function(err) {
+    async.series([
+      nginx.scaffold,
+      nginx.start,
+      nginx.location('/express-test').proxy('http://localhost:3000/')
+    ], function(err) {
       if (err) {
         return console.error(err);
       }
@@ -68,9 +70,8 @@ express()
     });
   });
 
-
+nginx.stopOnExit();
 ```
-
 
 ## How it Works
 
@@ -93,72 +94,28 @@ When using ngineer it's important to note that you are probably accepting a few 
 Ngineer communicates with the `nginx` process and sends the `HUP` [signal](http://wiki.nginx.org/CommandLine#Loading_a_New_Configuration_Using_Signals)
 to flag the the nginx configuration should be reloaded and nginx gracefully restarted.
 
-
 ## Why ngineer?
 
 Why do you want this?  Well, because `nginx` does a kick arse job of serving
-static files and also proxying services so it makes sense you use it over
-pure node alternatives such as [node-http-proxy](https://github.com/nodejitsu/node-http-proxy).
-No offense is meant to the awesome [nodejitsu](nodejitsu.com) team here, but
-I feel much more comfortable using nginx over node to be the first line in
-serving both node applications and static content.
+static files and also proxying services so this provides you an option of using it
+over node based proxying solutions.
 
 ## Prior Art
 
-- [nginx-http-proxy](https://github.com/liamoehlman/nginx-http-proxy)
+* [nginx-http-proxy](https://github.com/liamoehlman/nginx-http-proxy)
 
 ## Alternative Projects
 
 Before using `ngineer` you should consider also consider the following
 projects (in addition to those listed in Prior Art):
 
-- [nginx-vhosts](https://github.com/maxogden/nginx-vhosts)
-
-## Reference
-
-### ngineer(basePath, opts)
-
-#### location(pattern) => NginxLocation
-
-Create a new location directive for the nginx configuration
-
-#### reload()
-
-The reload method sends the reload configuration (HUP) signal to the nginx process.
-
-#### reset()
-
-The reset function cleans out the config directory and stops the nginx running if
-is running.
-
-#### scaffold(callback)
-
-Scaffold an nginx configuration directory based on a known default
-configuration.
-
-#### start(callback)
-
-Attempt to start nginx by using a few well known nginx binary locations.
-
-#### stop(callback)
-
-
-Stop the nginx process
-
-### location(pattern)
-
-Create a location section for the nginx configuraton.
-
-#### proxy(targetUrl)
-
-Include a [proxy_pass](http://wiki.nginx.org/HttpProxyModule#proxy_pass)
-directive into the location
+* [nginx-vhosts](https://github.com/maxogden/nginx-vhosts)
 
 ## License(s)
 
 ### MIT
 
-Copyright (c) 2017 Damon Oehlman <damon.oehlman@gmail.com>
+Copyright (c) 2017 Damon Oehlman <mailto:damon.oehlman@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

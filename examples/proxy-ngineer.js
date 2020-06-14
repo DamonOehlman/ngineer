@@ -1,5 +1,5 @@
-var async = require('async');
-var nginx = require('..')(__dirname + '/nginx', {
+const async = require('async');
+const nginx = require('..')(__dirname + '/nginx', {
   port: 8080
 });
 
@@ -15,3 +15,5 @@ async.series([
   console.log('started nginx, pid: ' + nginx.pid);
   console.log('proxying google at http://localhost:8080/ngineer');
 });
+
+nginx.stopOnExit();

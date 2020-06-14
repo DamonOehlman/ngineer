@@ -1,23 +1,25 @@
-var async = require('async');
-var debug = require('debug')('ngineer:scaffold');
-var mkdirp = require('mkdirp');
-var path = require('path');
-var fs = require('fs');
-var replaceStream = require('replacestream');
-var CONFIG_DIRS = [ 'conf', 'html', 'logs' ];
-var REQUIRED_FILES = [
+const async = require('async');
+const debug = require('debug')('ngineer:scaffold');
+const mkdirp = require('mkdirp');
+const path = require('path');
+const fs = require('fs');
+const replaceStream = require('replacestream');
+const CONFIG_DIRS = [ 'conf', 'html', 'logs' ];
+const REQUIRED_FILES = [
   'conf/mime.types',
   'conf/nginx.conf',
   'html/index.html'
 ];
 
+const checkFileExists = (filename, callback) => fs.access(filename, err => callback(null, !err));
+
 module.exports = function(ngineer, basePath, opts) {
-  var scaffoldBase = path.resolve(__dirname, 'scaffold');
+  const scaffoldBase = path.resolve(__dirname, 'scaffold');
 
   function scaffoldFile(target, callback) {
-    var src = path.join(scaffoldBase, target.slice(basePath.length));
-    var writer = fs.createWriteStream(target);
-    var reader = fs.createReadStream(src);
+    const src = path.join(scaffoldBase, target.slice(basePath.length));
+    const writer = fs.createWriteStream(target);
+    const reader = fs.createReadStream(src);
 
     debug('scaffolding file: ' + src);
     reader.on('error', callback);
@@ -30,26 +32,25 @@ module.exports = function(ngineer, basePath, opts) {
   }
 
   return function(callback) {
-    var configPaths = CONFIG_DIRS.map(function(subpath) {
+    const configPaths = CONFIG_DIRS.map(function(subpath) {
       return path.join(basePath, subpath);
     });
 
-    var requiredFiles = REQUIRED_FILES.map(function(subpath) {
+    const requiredFiles = REQUIRED_FILES.map(function(subpath) {
       return path.join(basePath, subpath);
     });
 
     debug('ensuring required directories exist: ', configPaths);
-    async.forEach(configPaths, mkdirp, function(err) {
-      if (err) {
-        return callback(err);
-      }
-
-      async.reject(requiredFiles, fs.exists, function(results) {
-        async.forEach(results, scaffoldFile, function(err) {
-          debug('scaffolding complete');
-          callback(err);
+    Promise.all(configPaths.map(requiredPath => mkdirp(requiredPath)))
+      .then(() => {
+        debug('required directories exist, checking for required files: ', requiredFiles);
+        async.reject(requiredFiles, checkFileExists, function(err, results) {
+          async.forEach(results, scaffoldFile, function(scaffoldErr) {
+            debug('scaffolding complete');
+            callback(scaffoldErr);
+          });
         });
-      });
-    });
+      })
+      .catch(callback);
   };
 };

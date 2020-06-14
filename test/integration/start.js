@@ -3,13 +3,9 @@ const { EventEmitter } = require('events');
 const path = require('path');
 const assert = require('assert');
 const { exec } = require('child_process');
-const testServer = require('../helpers/test-server');
 const nginx = require('../helpers/nginx');
 const request = require('supertest');
 const rimraf = require('rimraf');
-
-// bind the request arg
-// request = request.bind(request, 'http://localhost:8886');
 
 describe('start nginx', function() {
   let instance;

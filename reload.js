@@ -1,6 +1,6 @@
-var debug = require('debug')('ngineer:reload');
-var exec = require('child_process').exec;
-var config = require('./config');
+const debug = require('debug')('ngineer:reload');
+const exec = require('child_process').exec;
+const config = require('./config');
 
 module.exports = function(nginx, basePath, opts) {
   return function(callback) {
