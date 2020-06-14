@@ -16,7 +16,7 @@ The following example shows how the `ngineer` module can be used to scaffold and
 
 ```js
 const async = require('async');
-const nginx = require('..')(__dirname + '/nginx', {
+const nginx = require('ngineer')(__dirname + '/nginx', {
   port: 8080
 });
 
@@ -42,7 +42,7 @@ The above example proxies a request from <http://localhost:8080/ngineer> through
 const async = require('async');
 const express = require('express');
 
-const nginx = require('..')(__dirname + '/nginx', {
+const nginx = require('ngineer')(__dirname + '/nginx', {
   port: 8080
 });
 
