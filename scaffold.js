@@ -11,6 +11,8 @@ const REQUIRED_FILES = [
   'html/index.html'
 ];
 
+const checkFileExists = (filename, callback) => fs.access(filename, err => callback(null, !err));
+
 module.exports = function(ngineer, basePath, opts) {
   const scaffoldBase = path.resolve(__dirname, 'scaffold');
 
@@ -39,17 +41,16 @@ module.exports = function(ngineer, basePath, opts) {
     });
 
     debug('ensuring required directories exist: ', configPaths);
-    async.forEach(configPaths, mkdirp, function(err) {
-      if (err) {
-        return callback(err);
-      }
-
-      async.reject(requiredFiles, fs.exists, function(results) {
-        async.forEach(results, scaffoldFile, function(err) {
-          debug('scaffolding complete');
-          callback(err);
+    Promise.all(configPaths.map(requiredPath => mkdirp(requiredPath)))
+      .then(() => {
+        debug('required directories exist, checking for required files: ', requiredFiles);
+        async.reject(requiredFiles, checkFileExists, function(err, results) {
+          async.forEach(results, scaffoldFile, function(scaffoldErr) {
+            debug('scaffolding complete');
+            callback(scaffoldErr);
+          });
         });
-      });
-    });
+      })
+      .catch(callback);
   };
 };

@@ -37,13 +37,13 @@ async.series([
 The above example proxies a request from <http://localhost:8080/ngineer> through to <https://github.com/DamonOehlman/ngineer>.  A more practical example is shown below where we proxy a local [express](https://github.com/visionmedia/express) application through nginx.
 
 ```js
-var async = require('async');
-var express = require('express');
+const async = require('async');
+const express = require('express');
 
-var nginx = require('ngineer')(__dirname + '/nginx', {
+const nginx = require('ngineer')(__dirname + '/nginx', {
   port: 8080
 });
-var proxy = nginx.location('/express-test').proxy('http://localhost:3000/');
+const proxy = nginx.location('/express-test').proxy('http://localhost:3000/');
 
 // create our simple express app
 express()

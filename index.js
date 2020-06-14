@@ -31,9 +31,9 @@ module.exports = function(basePath, opts) {
 
   function readPID() {
     // open the pid file
-    debug('looking for pid file: ' + pidLocation);
+    debug(`looking for pid file: ${pidLocation}`);
     fs.readFile(pidLocation, 'utf8', function(err, data) {
-      var watchTarget = pidLocation;
+      let watchTarget = pidLocation;
 
       // if we hit an error opening the file, then the pid file does not exist
       // therefore we will assume that nginx is not running
@@ -42,14 +42,13 @@ module.exports = function(basePath, opts) {
         if (nginx.online) {
           nginx.online = false;
         }
-      }
-      // otherwise, read the file and check on the process status
-      else {
+      } else {
+        // otherwise, read the file and check on the process status
         return monitorProcess(parseInt(data, 10));
       }
 
       // work up parent folders until we find a valid location
-      while (! fs.existsSync(watchTarget)) {
+      while (!fs.existsSync(watchTarget)) {
         watchTarget = path.dirname(watchTarget);
       }
 
@@ -58,11 +57,21 @@ module.exports = function(basePath, opts) {
         return process.nextTick(readPID);
       }
 
+      // check that we can read the file (avoid potential race condition with scaffolding)
+      try {
+        fs.accessSync(watchTarget, fs.constants.R_OK);
+      } catch (e) {
+        debug(`no read access to ${watchTarget}, sleeping 500ms`);
+        setTimeout(readPID, 500);
+        return;
+      }
+
       // watch the appropriate location and trigger a reread when something changes
-      debug('watching: ' + watchTarget);
-      fs.watch(watchTarget, function(evt, filename) {
-        debug('target "' + watchTarget + '" changed');
-        this.close();
+      debug(`watching: ${watchTarget}`);
+      const watcher = fs.watch(watchTarget, { persistent: false });
+      watcher.once('change', () => {
+        debug(`target "${watchTarget}" changed`);
+        watcher.close();
         readPID();
       });
     });
@@ -118,7 +127,7 @@ module.exports = function(basePath, opts) {
     Stop the nginx process
   **/
   nginx.stop = require('./stop')(nginx, basePath, opts);
-
+  nginx.stopOnExit = require('./stop-on-exit')(nginx);
 
   Object.defineProperty(nginx, 'online', {
     get: function() {
