@@ -47,7 +47,7 @@ module.exports = function(basePath, opts) {
 
         // file exists but pid is not yet valid
         if (isNaN(filePid)) {
-          return process.nextTick(fs.readPID);
+          return process.nextTick(readPID);
         }
 
         // otherwise, read the file and check on the process status
