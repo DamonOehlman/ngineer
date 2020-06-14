@@ -1,12 +1,13 @@
-var ngineer = require('../../'),
-    path = require('path'),
-    assert = require('assert'),
-    exec = require('child_process').exec,
-    nginx = require('../helpers/nginx'),
-    request = require('supertest'),
-    instance;
+const ngineer = require('../../');
+const path = require('path');
+const assert = require('assert');
+const exec = require('child_process').exec;
+const nginx = require('../helpers/nginx');
+const request = require('supertest');
 
 describe('detect online', function() {
+  let instance;
+
   before(nginx.start);
   after(nginx.stop);
 

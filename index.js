@@ -1,59 +1,19 @@
-var async = require('async');
-var debug = require('debug')('ngineer');
-var fs = require('fs');
-var path = require('path');
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
-var procinfo = require('procinfo');
-var exec = require('child_process').exec;
+const async = require('async');
+const debug = require('debug')('ngineer');
+const fs = require('fs');
+const path = require('path');
+const EventEmitter = require('events').EventEmitter;
+const util = require('util');
+const procinfo = require('procinfo');
+const exec = require('child_process').exec;
 
-/**
-  # ngineer
+const createLocation = require('./sections/location');
 
-  ngineer is a node automation later for nginx that assists with the following:
-
-  - scaffolding a new nginx configuration folder (i.e. `conf/`, `html/`, `logs/`)
-  - starting and reloading nginx using targeted base path
-  - adding location proxy directives
-
-  ## Getting Started
-
-  <<< docs/getting-started.md
-
-  ## How it Works
-
-  <<< docs/howitworks.md
-
-  ## Why ngineer?
-
-  Why do you want this?  Well, because `nginx` does a kick arse job of serving
-  static files and also proxying services so it makes sense you use it over
-  pure node alternatives such as [node-http-proxy](https://github.com/nodejitsu/node-http-proxy).
-  No offense is meant to the awesome [nodejitsu](nodejitsu.com) team here, but
-  I feel much more comfortable using nginx over node to be the first line in
-  serving both node applications and static content.
-
-  ## Prior Art
-
-  - [nginx-http-proxy](https://github.com/liamoehlman/nginx-http-proxy)
-
-  ## Alternative Projects
-
-  Before using `ngineer` you should consider also consider the following
-  projects (in addition to those listed in Prior Art):
-
-  - [nginx-vhosts](https://github.com/maxogden/nginx-vhosts)
-
-  ## Reference
-
-  ### ngineer(basePath, opts)
-
-**/
 module.exports = function(basePath, opts) {
-  var nginx = new EventEmitter();
-  var online = false;
-  var pidLocation = path.resolve(basePath, (opts || {}).pidFile || 'logs/nginx.pid');
-  var pid = undefined;
+  const nginx = new EventEmitter();
+  const pidLocation = path.resolve(basePath, (opts || {}).pidFile || 'logs/nginx.pid');
+  let online = false;
+  let pid = undefined;
 
   function monitorProcess(targetPid) {
     debug('looking up process information for process: ' + targetPid);
@@ -114,12 +74,10 @@ module.exports = function(basePath, opts) {
     Create a new location directive for the nginx configuration
 
   **/
-  nginx.location = function(pattern) {
-    var section = require('./sections/location')(nginx, basePath, opts);
-
-    section.pattern = pattern;
-    return section;
-  };
+  nginx.location = pattern => createLocation(nginx, basePath, {
+    ...opts,
+    pattern,
+  });
 
   /**
     #### reload()

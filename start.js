@@ -1,9 +1,9 @@
-var async = require('async');
-var debug = require('debug')('ngineer:start');
-var exec = require('child_process').exec;
-var path = require('path');
-var fs = require('fs');
-var config = require('./config');
+const async = require('async');
+const debug = require('debug')('ngineer:start');
+const exec = require('child_process').exec;
+const path = require('path');
+const fs = require('fs');
+const config = require('./config');
 
 module.exports = function(ngineer, basePath, opts) {
   function nginxStart(callback) {
@@ -26,7 +26,7 @@ module.exports = function(ngineer, basePath, opts) {
   }
 
   return function(callback) {
-    var startTimeout;
+    let startTimeout;
 
     function handleOnline() {
       debug('detected nginx online');

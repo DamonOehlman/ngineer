@@ -1,16 +1,14 @@
-
 # ngineer
 
 ngineer is a node automation later for nginx that assists with the following:
 
-- scaffolding a new nginx configuration folder (i.e. `conf/`, `html/`, `logs/`)
-- starting and reloading nginx using targeted base path
-- adding location proxy directives
-
+* scaffolding a new nginx configuration folder (i.e. `conf/`, `html/`, `logs/`)
+* starting and reloading nginx using targeted base path
+* adding location proxy directives
 
 [![NPM](https://nodei.co/npm/ngineer.png)](https://nodei.co/npm/ngineer/)
 
-[![unstable](https://img.shields.io/badge/stability-unstable-yellowgreen.svg)](https://github.com/dominictarr/stability#unstable) [![Build Status](https://api.travis-ci.org/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer) [![bitHound Score](https://www.bithound.io/github/DamonOehlman/ngineer/badges/score.svg)](https://www.bithound.io/github/DamonOehlman/ngineer) 
+[![unstable](https://img.shields.io/badge/stability-unstable-yellowgreen.svg)](https://github.com/dominictarr/stability#unstable) [![Build Status](https://api.travis-ci.org/DamonOehlman/ngineer.svg?branch=master)](https://travis-ci.org/DamonOehlman/ngineer)
 
 ## Getting Started
 
@@ -34,10 +32,9 @@ async.series([
   console.log('started nginx, pid: ' + nginx.pid);
   console.log('proxying google at http://localhost:8080/ngineer');
 });
-
 ```
 
-The above example proxies a request from http://localhost:8080/ngineer through to https://github.com/DamonOehlman/ngineer.  A more practical example is shown below where we proxy a local [express](https://github.com/visionmedia/express) application through nginx.
+The above example proxies a request from <http://localhost:8080/ngineer> through to <https://github.com/DamonOehlman/ngineer>.  A more practical example is shown below where we proxy a local [express](https://github.com/visionmedia/express) application through nginx.
 
 ```js
 var async = require('async');
@@ -67,10 +64,7 @@ express()
       console.log('express app available at http://localhost:8080/express-test');
     });
   });
-
-
 ```
-
 
 ## How it Works
 
@@ -93,7 +87,6 @@ When using ngineer it's important to note that you are probably accepting a few 
 Ngineer communicates with the `nginx` process and sends the `HUP` [signal](http://wiki.nginx.org/CommandLine#Loading_a_New_Configuration_Using_Signals)
 to flag the the nginx configuration should be reloaded and nginx gracefully restarted.
 
-
 ## Why ngineer?
 
 Why do you want this?  Well, because `nginx` does a kick arse job of serving
@@ -105,14 +98,14 @@ serving both node applications and static content.
 
 ## Prior Art
 
-- [nginx-http-proxy](https://github.com/liamoehlman/nginx-http-proxy)
+* [nginx-http-proxy](https://github.com/liamoehlman/nginx-http-proxy)
 
 ## Alternative Projects
 
 Before using `ngineer` you should consider also consider the following
 projects (in addition to those listed in Prior Art):
 
-- [nginx-vhosts](https://github.com/maxogden/nginx-vhosts)
+* [nginx-vhosts](https://github.com/maxogden/nginx-vhosts)
 
 ## Reference
 
@@ -142,7 +135,6 @@ Attempt to start nginx by using a few well known nginx binary locations.
 
 #### stop(callback)
 
-
 Stop the nginx process
 
 ### location(pattern)
@@ -158,7 +150,7 @@ directive into the location
 
 ### MIT
 
-Copyright (c) 2017 Damon Oehlman <damon.oehlman@gmail.com>
+Copyright (c) 2017 Damon Oehlman <mailto:damon.oehlman@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

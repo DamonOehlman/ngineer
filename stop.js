@@ -1,9 +1,9 @@
-var async = require('async');
-var debug = require('debug')('ngineer:stop');
-var exec = require('child_process').exec;
-var path = require('path');
-var fs = require('fs');
-var config = require('./config');
+const async = require('async');
+const debug = require('debug')('ngineer:stop');
+const exec = require('child_process').exec;
+const path = require('path');
+const fs = require('fs');
+const config = require('./config');
 
 module.exports = function(ngineer, basePath, opts) {
   return function(callback) {
@@ -12,8 +12,8 @@ module.exports = function(ngineer, basePath, opts) {
         return callback(err);
       }
 
-      debug('running: ' + command + ' -s stop');
-      exec(command + ' -s stop', function() {
+      debug(`running: ${command} -s stop`);
+      exec(`${command} -s stop`, function() {
         callback();
       });
     });

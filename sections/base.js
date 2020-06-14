@@ -1,33 +1,32 @@
-var debug = require('debug')('ngineer:section');
-var mkdirp = require('mkdirp');
-var path = require('path');
-var fs = require('fs');
+const debug = require('debug')('ngineer:section:base');
+const mkdirp = require('mkdirp');
+const path = require('path');
+const fs = require('fs');
 
 module.exports = function(nginx, basePath, opts) {
-  var directives = [];
+  const directives = [];
 
   function section(callback) {
-    var filename = path.join(basePath, 'conf', section.filename);
+    debug(`initializing section for basepath = ${basePath}, filename = ${section.filename}`);
+    const filename = path.join(basePath, 'conf', section.filename);
 
     // if the section doesn't have a filename, then do nothing
     if (! section.filename) {
       return callback();
     }
 
-    mkdirp(path.dirname(filename), function(err) {
-      if (err) {
-        return callback(err);
-      }
+    mkdirp(path.dirname(filename))
+      .then(() => {
+        debug('writing section file: ' + filename);
+        fs.writeFile(filename, section.output, 'utf8', function(err) {
+          if (err) {
+            return callback(err);
+          }
 
-      debug('writing section file: ' + filename);
-      fs.writeFile(filename, section.output, 'utf8', function(err) {
-        if (err) {
-          return callback(err);
-        }
-
-        nginx.reload(callback);
-      });
-    });
+          nginx.reload(callback);
+        });
+      })
+      .catch(callback);
   }
 
   section.directive = function() {
