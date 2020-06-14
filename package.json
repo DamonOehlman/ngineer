@@ -26,7 +26,7 @@
     "url": "https://github.com/DamonOehlman/ngineer/issues"
   },
   "scripts": {
-    "test": "mocha test/integration --reporter spec -t 5s --exit",
+    "test": "mocha test/integration --reporter spec -t 10s --exit",
     "gendocs": "embellish README.md"
   },
   "main": "index.js",
