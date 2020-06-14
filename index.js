@@ -13,10 +13,10 @@ module.exports = function(basePath, opts) {
   const nginx = new EventEmitter();
   const pidLocation = path.resolve(basePath, (opts || {}).pidFile || 'logs/nginx.pid');
   let online = false;
-  let pid = undefined;
+  let pid;
 
   function monitorProcess(targetPid) {
-    debug('looking up process information for process: ' + targetPid);
+    debug(`looking up process information for process: ${targetPid}`);
     procinfo(targetPid, function(err, processData) {
       pid = processData && processData.pids[0];
       nginx.online = !err;
@@ -43,8 +43,15 @@ module.exports = function(basePath, opts) {
           nginx.online = false;
         }
       } else {
+        const filePid = parseInt(data, 10);
+
+        // file exists but pid is not yet valid
+        if (isNaN(filePid)) {
+          return process.nextTick(fs.readPID);
+        }
+
         // otherwise, read the file and check on the process status
-        return monitorProcess(parseInt(data, 10));
+        return monitorProcess(filePid);
       }
 
       // work up parent folders until we find a valid location
