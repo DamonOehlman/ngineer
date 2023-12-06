@@ -6,7 +6,7 @@
   "stability": "unstable",
   "dependencies": {
     "async": "^3.2.0",
-    "debug": "^4.1.1",
+    "debug": "^4.3.1",
     "mkdirp": "^1.0.4",
     "procinfo": "~0.1",
     "replacestream": "^4.0.2"
